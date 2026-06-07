@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAYAWANTI PUNJ TRAINING INSTITUTE ERP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h1>Dayawanti Punj Training Institute</h1>
+            <h2>Sitamarhi, Sant Ravidas Nagar, Bhadohi</h2>
+
+            <label style="margin-top: 15px;">Select ERP Access Portal Group</label>
+            <select id="role-select" onchange="toggleDynamicFields()">
+                <option value="admin">Admin Department Control</option>
+                <option value="accounts">Accounts & Financial Desk</option>
+                <option value="teacher">Faculty Professor Portal</option>
+                <option value="student">Student Dashboard</option>
+                <option value="parent">Parent Monitoring Desk</option>
+            </select>
+
+            <div id="form-fields-container">
+                <div id="field-username"><input type="text" id="login-username" placeholder="Username"></div>
+                <div id="field-course" style="display:none;">
+                    <select id="login-course"></select>
+                </div>
+                <div id="field-id-number" style="display:none;"><input type="text" id="login-id-number"
+                        placeholder="Unique Key Mapping"></div>
+                <div id="field-password"><input type="password" id="login-password"
+                        placeholder="Enter Account Security Password" value="1234"></div>
+            </div>
+
+            <button class="login-btn" onclick="executeAuthenticationRequest()">Secure Login</button>
+            <p id="demo-hints"
+                style="text-align: center; margin-top: 15px; font-size: 12px; color: #64748b; font-weight: 500;"></p>
+        </div>
+    </div>
+
+    <div id="app">
+        <div class="navbar">
+            <h2 id="college-title-header">DAYAWANTI PUNJ TRAINING INSTITUTE - MANAGEMENT SYSTEMS</h2>
+            <div class="user-info">
+                <span id="user-display">Loading User Session...</span>
+                <button class="logout-btn" onclick="logout()">Terminate Session</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="sidebar">
+                <ul class="sidebar-menu" id="sidebar-menu"></ul>
+            </div>
+
+            <div class="content">
+                <div id="accounts-warning-strip" style="display:none;"></div>
+
+                <div class="notice-container" id="notice-board-wrapper">
+                    <h4>Campus Circular Desk and Broadcast Timeline</h4>
+                    <div class="global-notices-list"></div>
+                </div>
+
+                <div id="admin-dashboard" class="module">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4>Active Rosters Enrolled</h4>
+                            <div class="number" id="total-students">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Assigned Professors</h4>
+                            <div class="number" id="total-teachers">0</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Add New Academic Course Stream</h3>
+                        <div class="form-row">
+                            <div class="form-group"><label>Course Stream Code (e.g., BCA, MCA)</label><input type="text"
+                                    id="new-course-code" placeholder="BCA"></div>
+                            <div class="form-group"><label>Configured Tuition Fee Structure (₹)</label><input
+                                    type="number" id="new-course-fee" placeholder="35000"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Standard Faculty Base Salary (₹)</label><input type="number"
+                                    id="new-course-salary" placeholder="50000"></div>
+                        </div>
+                        <button class="btn" onclick="addNewCourseStructure()">Inject New Course</button>
+                    </div>
+
+                    <div class="card">
+                        <h3>Master Configuration - Global Course Fees and Salary Control</h3>
+                        <table id="admin-course-config-table">
+                            <thead>
+                                <tr>
+                                    <th>Academic Stream Component</th>
+                                    <th>Configured Tuition Fee Structure (₹)</th>
+                                    <th>Standard Faculty Base Salary (₹)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="admin-admission" class="module">
+                    <div class="card">
+                        <h3>Student Admission Entry Engine</h3>
+                        <div class="form-row">
+                            <div class="form-group"><label>Student Full Name</label><input type="text" id="student-name"
+                                    placeholder="Rajesh Kumar"></div>
+                            <div class="form-group"><label>Allot System Roll ID</label><input type="text"
+                                    id="student-roll" placeholder="ROLL-101"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Assigned Course Stream</label>
+                                <select id="student-course"></select>
+                            </div>
+                            <div class="form-group"><label>Father / Guardian Name</label><input type="text"
+                                    id="student-parent" placeholder="Father Name"></div>
+                        </div>
+                        <button class="btn" onclick="registerStudent()">Confirm Identity Registry</button>
+                    </div>
+                    <div class="card">
+                        <h3>Student Master Registry Masterlist</h3>
+                        <table id="students-table">
+                            <thead>
+                                <tr>
+                                    <th>Photo ID</th>
+                                    <th>Roll ID</th>
+                                    <th>Full Student Name</th>
+                                    <th>Course Map</th>
+                                    <th>Guardian</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="admin-teachers" class="module">
+                    <div class="card">
+                        <h3>Professor System Enlistment Matrix</h3>
+                        <div class="form-row">
+                            <div class="form-group"><label>Faculty Member Name</label><input type="text"
+                                    id="teacher-name" placeholder="Prof. Amit Sharma"></div>
+                            <div class="form-group"><label>Employee ID Code</label><input type="text"
+                                    id="teacher-emp-id" placeholder="EMP-501"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Department Stream Assignment</label>
+                                <select id="teacher-subject"></select>
+                            </div>
+                        </div>
+                        <button class="btn" onclick="registerTeacher()">Create Teacher Profile</button>
+                    </div>
+
+                    <div class="card">
+                        <h3>Faculty Master Registry Masterlist</h3>
+                        <table id="teachers-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Faculty Name</th>
+                                    <th>Assigned Stream</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="accounts-ledger-view" class="module">
+                    <div class="card">
+                        <h3>Student Accounts Monitoring Desk & Warning Dispatcher</h3>
+                        <table id="acc-fee-management-table">
+                            <thead>
+                                <tr>
+                                    <th>Roll ID</th>
+                                    <th>Student Candidate</th>
+                                    <th>Assigned Stream</th>
+                                    <th>Fee Obligation</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="card">
+                        <h3>Faculty Ledger Disbursal Sheets</h3>
+                        <table id="acc-salary-management-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Faculty Name</th>
+                                    <th>Target Streams</th>
+                                    <th>Calculated Salary</th>
+                                    <th>System Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="teacher-marks-entry" class="module">
+                    <div class="card">
+                        <h3>Term Marks Statement Input Terminal</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Target Paper</label>
+                                <select id="marks-subject-select">
+                                    <option value="Subject-I">Core Theory Component I</option>
+                                    <option value="Subject-II">Core Theory Component II</option>
+                                    <option value="Practical-Lab">Institutional Lab Practical Evaluation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <table id="faculty-marks-table">
+                            <thead>
+                                <tr>
+                                    <th>Roll ID</th>
+                                    <th>Student Candidate</th>
+                                    <th>Mid-Term Exam (30)</th>
+                                    <th>Final Semester (70)</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <button class="btn btn-success" style="margin-top:20px;"
+                            onclick="saveStudentsMarksMatrix()">Lock Term Marks Parameters</button>
+                    </div>
+                </div>
+
+                <div id="shared-communication-desk" class="module">
+                    <div class="card">
+                        <h3>Bi-Directional Chat System Bridge</h3>
+                        <div class="form-group" style="margin-bottom:15px;" id="chat-target-selector-wrapper"></div>
+                        <div class="chat-container" id="chat-stream-render-panel"></div>
+                        <div class="form-row" style="grid-template-columns: 4fr 1fr; gap:10px;">
+                            <input type="text" id="chat-message-input-node"
+                                placeholder="Type query text content strings...">
+                            <button class="btn" onclick="transmitChatMessage()">Transmit</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="student-marksheet-view" class="module">
+                    <div class="card">
+                        <h3>Official Institutional Terminal Marksheet Statement</h3>
+                        <div id="marksheet-header-meta"
+                            style="margin-bottom: 20px; font-size:14px; color:#475569; line-height:1.6;"></div>
+                        <table id="student-marksheet-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject Component Line Item</th>
+                                    <th>Mid-Term (30)</th>
+                                    <th>Final Term (70)</th>
+                                    <th>Total Obtained</th>
+                                    <th>Status Evaluation</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="marksheet-summary-footer"
+                            style="margin-top: 25px; font-size:16px; font-weight:bold; color:#1e3a8a;"></div>
+                    </div>
+                </div>
+
+                <div id="student-fee" class="module">
+                    <div class="card">
+                        <h3>Fee Collection Gateway Terminal</h3>
+                        <div id="fee-status-narrative-frame" style="line-height:2; font-size:15px; margin-bottom:20px;">
+                        </div>
+
+                        <div id="active-payment-interactive-zone">
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="form-group">
+                                    <label>Enter Custom Amount to Settle (₹)</label>
+                                    <input type="number" id="payment-quantum-input" placeholder="Example: 5000"
+                                        oninput="regenerateUPIPaymentQR()">
+                                </div>
+                            </div>
+
+                            <div class="payment-gateway-box">
+                                <div class="qr-render-frame" id="dynamic-qr-box"></div>
+                                <div>
+                                    <h4 style="color:#1e3a8a; margin-bottom:6px;">Unified Payments Interface Secure
+                                        Gateway</h4>
+                                    <p style="font-size:13px; color:#475569; line-height:1.4; max-width:400px;">Scan
+                                        this auto-generated dynamic QR code securely with any Indian banking system
+                                        applications (GPay, PhonePe, Paytm, BHIM) to settle accounts instantly.</p>
+                                    <button class="btn btn-success" style="margin-top:12px;"
+                                        onclick="simulateTransactionConfirmation()">Confirm Payment Execution</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Transaction History Logs & Statements Sheets</h3>
+                        <table id="receipts-registry-table">
+                            <thead>
+                                <tr>
+                                    <th>Receipt ID Token</th>
+                                    <th>Processing Timestamp</th>
+                                    <th>Settled Quantum</th>
+                                    <th>System State</th>
+                                    <th>Receipts actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="receipt-print-block" id="printable-invoice-canvas"></div>
+                </div>
+
+                <div id="shared-notice-panel" class="module">
+                    <div class="card">
+                        <h3>Publish Institutional Bulletin System Record</h3>
+                        <div class="form-group"><label>Notice Subject Line</label><input type="text" id="notice-title"
+                                placeholder="University Examination Matrix Updates"></div>
+                        <div class="form-group" style="margin: 15px 0;"><label>Message Content Layout
+                                Body</label><textarea id="notice-content" rows="4"
+                                placeholder="Enter formal textual communications parameters..."></textarea></div>
+                        <button class="btn" onclick="publishNotice()">Publish Statement</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
