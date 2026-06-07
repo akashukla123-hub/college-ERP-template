@@ -25,3 +25,5 @@ ERP-System/
 ├── style.css        # Responsive dashboard layouts and UI theme rules
 ├── script.js        # Core system engine and LocalStorage state handlers
 └── README.md        # Project documentation (This file)
+
+<img width="733" height="402" alt="image" src="https://github.com/user-attachments/assets/178f0496-cb41-47e2-942e-7eff6120b904" />
